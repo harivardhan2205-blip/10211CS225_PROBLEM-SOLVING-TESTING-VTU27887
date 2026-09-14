@@ -1,0 +1,39 @@
+class Solution {
+    public int daysBetweenDates(String date1, String date2) {
+        return Math.abs(daysFromEpoch(date1) - daysFromEpoch(date2));
+    }
+    
+    private boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+    
+    private int daysFromEpoch(String date) {
+        String[] parts = date.split("-");
+        int year = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int day = Integer.parseInt(parts[2]);
+        
+        int[] daysInMonths = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        
+        int totalDays = 0;
+        
+        // Add days for all previous years from 1971
+        for (int y = 1971; y < year; y++) {
+            totalDays += isLeapYear(y) ? 366 : 365;
+        }
+        
+        // Add days for months in the current year
+        for (int m = 1; m < month; m++) {
+            if (m == 2 && isLeapYear(year)) {
+                totalDays += 29;
+            } else {
+                totalDays += daysInMonths[m];
+            }
+        }
+        
+        // Add days for the current month
+        totalDays += day;
+        
+        return totalDays;
+    }
+}
